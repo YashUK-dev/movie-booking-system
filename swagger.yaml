@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  title: Movie Booking Platform API
+  version: 1.0.0
+  description: API documentation for the Movie Booking Platform backend.
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local Development Server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string }
+                phone: { type: string }
+                password: { type: string }
+      responses:
+        '201':
+          description: User registered successfully
+
+  /auth/login:
+    post:
+      summary: Login
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Logged in successfully
+
+  /movies:
+    get:
+      summary: Get list of movies
+      tags: [Movies]
+      security: []
+      parameters:
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: genre
+          schema: { type: string }
+      responses:
+        '200':
+          description: Movies fetched successfully
+
+  /shows/{showId}/seats/lock:
+    post:
+      summary: Lock seats for booking
+      tags: [Shows, Seats]
+      parameters:
+        - in: path
+          name: showId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seatIds: 
+                  type: array
+                  items: { type: string }
+      responses:
+        '200':
+          description: Seats locked successfully
+        '409':
+          description: One or more selected seats are no longer available
+
+  /bookings:
+    post:
+      summary: Create a booking
+      tags: [Bookings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                showId: { type: string }
+                seatIds: 
+                  type: array
+                  items: { type: string }
+      responses:
+        '201':
+          description: Booking created successfully
+
+  /payments:
+    post:
+      summary: Process Mock Payment
+      tags: [Payments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bookingId: { type: string }
+                method: { type: string, enum: [CARD, UPI, NET_BANKING, WALLET] }
+                mockSuccess: { type: boolean, default: true }
+      responses:
+        '201':
+          description: Payment processed successfully
