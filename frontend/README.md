@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Movie Booking Platform Backend
 
 A production-ready REST API backend for a movie ticket booking platform, inspired by BookMyShow.
@@ -112,3 +113,21 @@ Send the token in the `Authorization` header for protected routes:
 - **Seat Locking Engine**: Currently relies on MongoDB atomic updates and a `setInterval` cron job for lock expiration. For extreme high-scale production, replace this with a Redis-based distributed lock and TTL keys.
 - **Transactions**: MongoDB transactions require a Replica Set. If running on a standalone local MongoDB without replica sets, the `session` logic will fail. To test transactions locally, convert your standalone MongoDB into a single-node replica set.
 - **Payment Gateway**: The current implementation uses a simulated mock. Integrate Stripe/Razorpay SDKs in `PaymentService`.
+=======
+# React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+>>>>>>> frontend/main
