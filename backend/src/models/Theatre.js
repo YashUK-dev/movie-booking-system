@@ -19,7 +19,4 @@ const theatreSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Indexes
-theatreSchema.index({ city: 1 });
-
 export const Theatre = mongoose.model('Theatre', theatreSchema);
