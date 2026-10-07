@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-node_modules
-.env
-.DS_Store
-coverage/
-*.log
-=======
+# Frontend .gitignore
+
 # Logs
 logs
 *.log
@@ -14,19 +9,35 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+
+# Environment variables (teammates: copy .env.example → .env, fill in values)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 *.local
+
+# Coverage
+coverage/
+
+# Vite cache
+.vite/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
->>>>>>> frontend/main
+Thumbs.db
