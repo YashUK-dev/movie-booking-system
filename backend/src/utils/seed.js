@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { User } from '../models/User.js';
 import { Movie } from '../models/Movie.js';
 import { Theatre } from '../models/Theatre.js';
@@ -9,7 +11,11 @@ import { Seat } from '../models/Seat.js';
 import { Show } from '../models/Show.js';
 import { ShowSeat } from '../models/ShowSeat.js';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Always load .env from backend root, regardless of where the script is run from
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const seedDatabase = async () => {
   try {

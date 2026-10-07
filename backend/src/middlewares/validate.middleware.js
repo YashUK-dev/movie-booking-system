@@ -1,4 +1,4 @@
-import { AnyZodObject } from 'zod';
+// import { AnyZodObject } from 'zod';
 import { ApiError } from '../utils/ApiError.js';
 
 export const validate = (schema) => async (req, res, next) => {
