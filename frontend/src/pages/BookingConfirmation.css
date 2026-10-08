@@ -1,0 +1,225 @@
+.confirmation-page {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-8) var(--spacing-4);
+}
+
+.confirmation-card {
+  width: 100%;
+  max-width: 520px;
+  padding: var(--spacing-8);
+  border-radius: var(--border-radius-xl);
+}
+
+/* Header */
+.confirmation-header {
+  text-align: center;
+  margin-bottom: var(--spacing-8);
+}
+
+.success-icon-wrapper {
+  color: var(--color-success);
+  margin-bottom: var(--spacing-4);
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.confirmation-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-2);
+}
+
+.confirmation-subtitle {
+  color: var(--color-text-muted);
+}
+
+/* Ticket */
+.ticket {
+  background: var(--color-surface);
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.ticket-top {
+  display: flex;
+  gap: var(--spacing-4);
+  padding: var(--spacing-5);
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(220, 38, 38, 0.05));
+}
+
+.ticket-poster {
+  width: 70px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--border-radius-md);
+}
+
+.ticket-movie-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--spacing-1);
+}
+
+.ticket-format {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Divider */
+.ticket-divider {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 24px;
+}
+
+.ticket-notch {
+  width: 24px;
+  height: 24px;
+  background: var(--color-background);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ticket-notch-left { left: -12px; }
+.ticket-notch-right { right: -12px; }
+
+.ticket-dashes {
+  flex-grow: 1;
+  margin: 0 16px;
+  border-top: 2px dashed var(--color-border);
+}
+
+/* Details */
+.ticket-details {
+  padding: var(--spacing-5);
+}
+
+.ticket-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-5);
+}
+
+.ticket-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ticket-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ticket-value {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.ticket-seats {
+  color: var(--color-primary);
+}
+
+/* Booking info */
+.ticket-booking-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: var(--spacing-4) 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--spacing-4);
+}
+
+.booking-id {
+  font-family: monospace;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.05em;
+}
+
+.amount-value {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-success);
+}
+
+/* Status */
+.ticket-status {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.status-badge-lg {
+  padding: 4px 12px;
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-confirmed, .status-pay-success {
+  background: rgba(22, 163, 74, 0.15);
+  color: var(--color-success);
+}
+
+.status-pending, .status-pay-pending {
+  background: rgba(234, 179, 8, 0.15);
+  color: var(--color-warning);
+}
+
+.status-cancelled, .status-pay-failed {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
+}
+
+.status-pay-refunded {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+/* Actions */
+.confirmation-actions {
+  display: flex;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-6);
+}
+
+.confirmation-actions > * {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+}
+
+.btn-outline {
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  background: transparent;
+}
+
+.btn-outline:hover {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+}
