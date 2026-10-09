@@ -41,3 +41,6 @@ coverage/
 *.sln
 *.sw?
 Thumbs.db
+
+# Ignore large media files
+public/videos/*.mp4

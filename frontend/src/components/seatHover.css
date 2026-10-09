@@ -1,0 +1,102 @@
+/*
+  seatHover.css — five hover-animation effects + antigravity repel.
+  Applied via .seat-fx + one of the five modifier classes.
+  CSS custom properties are set inline by Seat.jsx / useSeatRepel.js.
+
+  --seat-size   : element width/height (2rem for the 8×8 / h-8 w-8 seats)
+  --seat-radius : border-radius of the seat button
+  --seat-bg     : resting background colour (transparent for available)
+  --seat-ring   : resting border colour
+  --seat-green  : shared accent colour for all hover states
+
+  --repel-x     : X translation driven by useSeatRepel (default 0px)
+  --repel-y     : Y translation driven by useSeatRepel (default 0px)
+  --repel-s     : scale driven by useSeatRepel (default 1)
+*/
+
+/* ── antigravity repel ───────────────────────────────────────────────────────
+   The wrapper [data-seat-cell] stays fixed in layout.
+   Only the seat button inside it is transformed, keeping clicks in the right spot.
+   We list every animated property explicitly so Tailwind's `transition-colors`
+   shorthand (which also sets `transition`) cannot clobber the repel transform. */
+[data-seat-cell] > button {
+  transform: translate(var(--repel-x, 0px), var(--repel-y, 0px)) scale(var(--repel-s, 1));
+  transition:
+    transform       0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    color           0.15s ease,
+    background-color 0.15s ease,
+    border-color    0.15s ease,
+    box-shadow      0.15s ease,
+    opacity         0.15s ease;
+}
+
+.seat-fx {
+  --seat-green: #16a085;
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--seat-radius);
+}
+.seat-fx::before,
+.seat-fx::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: var(--seat-radius);
+  transition: all 0.25s ease;
+  pointer-events: none;
+}
+.seat-fx > span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── fill ───────────────────────────────────────────────────────────────────── */
+.seat-fill::before { transition-duration: 0.5s; box-shadow: inset 0 0 0 1px var(--seat-ring); }
+
+/* ── enter ──────────────────────────────────────────────────────────────────── */
+.seat-enter::after { box-shadow: inset 0 0 0 1px var(--seat-ring); }
+.seat-enter::before { border-radius: 0; margin-left: -100%; box-shadow: inset 0 0 0 var(--seat-size) var(--seat-green); }
+
+/* ── expand ─────────────────────────────────────────────────────────────────── */
+.seat-expand::after { box-shadow: inset 0 0 0 1px var(--seat-ring); }
+.seat-expand::before { background: var(--seat-green); box-shadow: inset 0 0 0 var(--seat-size) var(--seat-bg); }
+
+/* ── collapse ───────────────────────────────────────────────────────────────── */
+.seat-collapse::before { border-radius: 0; }
+.seat-collapse::after { box-shadow: inset 0 0 0 1px var(--seat-ring); }
+
+/* ── rotate ─────────────────────────────────────────────────────────────────── */
+.seat-rotate { box-shadow: inset 0 0 0 1px var(--seat-ring); }
+.seat-rotate::before,
+.seat-rotate::after { border: 0 solid transparent; }
+
+/* ── hover states: only on real pointer devices, respects reduced-motion ─────── */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .seat-fill:hover::before { box-shadow: inset 0 0 0 var(--seat-size) var(--seat-green); }
+  .seat-enter:hover::before { margin-left: 0; }
+  .seat-expand:hover::before { box-shadow: inset 0 0 0 1px var(--seat-bg); }
+  .seat-collapse:hover::before {
+    box-shadow:
+      inset 0 calc(var(--seat-size) / 2) 0 0 var(--seat-green),
+      inset 0 calc(var(--seat-size) / -2) 0 0 var(--seat-green);
+  }
+  .seat-rotate:hover::before {
+    transition: border-top-width 0.3s ease, border-top-color 0.3s ease;
+    border-width: var(--seat-size);
+    border-top-color: var(--seat-green);
+  }
+  .seat-rotate:hover::after {
+    transition: border-left-width 0.3s ease, border-left-color 0.3s ease;
+    border-width: var(--seat-size);
+    border-left-color: var(--seat-green);
+  }
+  .seat-rotate:hover {
+    transition: background 0.001s ease 0.3s;
+    background: var(--seat-green);
+  }
+}
