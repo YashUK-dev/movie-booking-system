@@ -1,225 +1,576 @@
-.confirmation-page {
+/* ─────────────────────────────────────────
+   BookingConfirmation.css
+   Branch: frontend/booking-payment
+   Teammate 4 — Booking Confirmation / Ticket Screen
+───────────────────────────────────────── */
+
+/* ── Page Shell ── */
+.bc-page {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: var(--spacing-8) var(--spacing-4);
+  align-items: flex-start;
+  padding: var(--spacing-10) var(--spacing-4) var(--spacing-16);
+  position: relative;
+  overflow: hidden;
 }
 
-.confirmation-card {
+/* Ambient background glow */
+.bc-page::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.08) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bc-wrapper {
   width: 100%;
   max-width: 520px;
-  padding: var(--spacing-8);
-  border-radius: var(--border-radius-xl);
+  position: relative;
+  z-index: 1;
+  animation: bc-slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Header */
-.confirmation-header {
+@keyframes bc-slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────
+   CONFETTI
+───────────────────── */
+.bc-confetti {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.bc-particle {
+  position: absolute;
+  top: -16px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: bc-confetti-fall linear both;
+}
+
+.bc-shape-1 { border-radius: 50%; }
+.bc-shape-2 { border-radius: 1px; height: 3px !important; }
+
+@keyframes bc-confetti-fall {
+  0%   { opacity: 1; transform: translateY(-10px) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+
+/* ─────────────────────
+   SUCCESS HEADER
+───────────────────── */
+.bc-header {
   text-align: center;
   margin-bottom: var(--spacing-8);
 }
 
-.success-icon-wrapper {
+.bc-success-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgba(22, 163, 74, 0.08);
+  border: 2px solid rgba(22, 163, 74, 0.2);
+  margin-bottom: var(--spacing-5);
+  animation: bc-ring-pulse 2.4s ease-in-out infinite;
+  position: relative;
+}
+
+/* Outer glow ring */
+.bc-success-ring::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(22, 163, 74, 0.1);
+  animation: bc-ring-pulse 2.4s ease-in-out 0.4s infinite;
+}
+
+/* Innermost ring */
+.bc-success-ring-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(22, 163, 74, 0.12);
+}
+
+.bc-check-icon {
   color: var(--color-success);
-  margin-bottom: var(--spacing-4);
-  animation: scaleIn 0.5s ease-out;
+  animation: bc-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
 }
 
-@keyframes scaleIn {
-  from { transform: scale(0); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+@keyframes bc-ring-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.06); opacity: 0.7; }
 }
 
-.confirmation-title {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
+@keyframes bc-pop {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60%  { transform: scale(1.2) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.bc-title {
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  margin-bottom: var(--spacing-2);
+  letter-spacing: -0.01em;
+}
+
+.bc-subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+/* ─────────────────────
+   THE TICKET
+───────────────────── */
+.bc-ticket {
+  background: var(--color-surface);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  margin-bottom: var(--spacing-6);
+  animation: bc-ticketIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+}
+
+@keyframes bc-ticketIn {
+  from { opacity: 0; transform: scale(0.94) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Ticket Top (red-tinted movie section) ── */
+.bc-ticket-top {
+  position: relative;
+  padding: var(--spacing-6);
+  background: linear-gradient(
+    135deg,
+    rgba(220, 38, 38, 0.18) 0%,
+    rgba(220, 38, 38, 0.05) 60%,
+    rgba(10, 10, 10, 0) 100%
+  );
+  overflow: hidden;
+}
+
+/* Decorative film strip holes on top edge */
+.bc-filmstrip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 var(--spacing-3);
+  pointer-events: none;
+}
+
+.bc-filmhole {
+  width: 20px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--color-background);
+  border: 1px solid rgba(255,255,255,0.04);
+  margin-top: -1px;
+}
+
+.bc-ticket-top-content {
+  display: flex;
+  gap: var(--spacing-4);
+  align-items: flex-start;
+  padding-top: var(--spacing-3);
+}
+
+/* Movie poster */
+.bc-ticket-poster-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.bc-ticket-poster {
+  width: 74px;
+  height: 106px;
+  object-fit: cover;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+  display: block;
+}
+
+.bc-poster-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--border-radius-lg);
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Movie text info */
+.bc-ticket-movie-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bc-eticket-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: var(--border-radius-full);
+  background: rgba(234, 179, 8, 0.15);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  color: var(--color-warning);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   margin-bottom: var(--spacing-2);
 }
 
-.confirmation-subtitle {
-  color: var(--color-text-muted);
-}
-
-/* Ticket */
-.ticket {
-  background: var(--color-surface);
-  border-radius: var(--border-radius-xl);
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-}
-
-.ticket-top {
-  display: flex;
-  gap: var(--spacing-4);
-  padding: var(--spacing-5);
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(220, 38, 38, 0.05));
-}
-
-.ticket-poster {
-  width: 70px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: var(--border-radius-md);
-}
-
-.ticket-movie-title {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
+.bc-ticket-movie-title {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  line-height: 1.25;
   margin-bottom: var(--spacing-1);
+  word-break: break-word;
 }
 
-.ticket-format {
-  font-size: var(--font-size-sm);
+.bc-ticket-format {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-xs);
   color: var(--color-text-muted);
+  margin-bottom: var(--spacing-2);
 }
 
-/* Divider */
-.ticket-divider {
+.bc-ticket-theatre {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.bc-ticket-theatre svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* ── Tear Divider ── */
+.bc-divider {
   display: flex;
   align-items: center;
   position: relative;
-  height: 24px;
+  height: 28px;
+  overflow: visible;
 }
 
-.ticket-notch {
-  width: 24px;
-  height: 24px;
-  background: var(--color-background);
+.bc-notch {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
+  background: var(--color-background);
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px var(--color-border);
+  z-index: 2;
 }
 
-.ticket-notch-left { left: -12px; }
-.ticket-notch-right { right: -12px; }
+.bc-notch-left  { left: -14px; }
+.bc-notch-right { right: -14px; }
 
-.ticket-dashes {
+.bc-dashes {
   flex-grow: 1;
-  margin: 0 16px;
+  margin: 0 20px;
   border-top: 2px dashed var(--color-border);
 }
 
-/* Details */
-.ticket-details {
-  padding: var(--spacing-5);
+/* ── Ticket Details ── */
+.bc-ticket-details {
+  padding: var(--spacing-5) var(--spacing-6);
 }
 
-.ticket-detail-grid {
+.bc-details-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-4);
+  gap: var(--spacing-5) var(--spacing-4);
   margin-bottom: var(--spacing-5);
 }
 
-.ticket-detail {
+.bc-detail-cell {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
-.ticket-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
+.bc-detail-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
 }
 
-.ticket-value {
-  font-weight: 600;
+.bc-detail-value {
   font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.3;
 }
 
-.ticket-seats {
+.bc-detail-seats {
   color: var(--color-primary);
+  font-size: var(--font-size-base);
 }
 
-/* Booking info */
-.ticket-booking-info {
+.bc-booking-id {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  letter-spacing: 0.06em;
+  word-break: break-all;
+}
+
+/* Amount Row */
+.bc-amount-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   padding: var(--spacing-4) 0;
   border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
   margin-bottom: var(--spacing-4);
 }
 
-.booking-id {
-  font-family: monospace;
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: 0.05em;
+.bc-amount-right {
+  text-align: right;
 }
 
-.amount-value {
-  font-size: var(--font-size-xl);
-  font-weight: 700;
+.bc-amount {
+  display: block;
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
   color: var(--color-success);
+  line-height: 1;
+  margin-top: 4px;
 }
 
-/* Status */
-.ticket-status {
+/* Status Badges */
+.bc-status-row {
   display: flex;
   gap: var(--spacing-2);
   flex-wrap: wrap;
 }
 
-.status-badge-lg {
-  padding: 4px 12px;
+.bc-badge {
+  padding: 3px 12px;
   border-radius: var(--border-radius-full);
   font-size: var(--font-size-xs);
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
-.status-confirmed, .status-pay-success {
+.bc-badge-confirmed, .bc-badge-pay-success {
   background: rgba(22, 163, 74, 0.15);
+  border: 1px solid rgba(22, 163, 74, 0.25);
   color: var(--color-success);
 }
 
-.status-pending, .status-pay-pending {
+.bc-badge-pending, .bc-badge-pay-pending {
   background: rgba(234, 179, 8, 0.15);
+  border: 1px solid rgba(234, 179, 8, 0.25);
   color: var(--color-warning);
 }
 
-.status-cancelled, .status-pay-failed {
+.bc-badge-cancelled, .bc-badge-pay-failed {
   background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.25);
   color: var(--color-danger);
 }
 
-.status-pay-refunded {
+.bc-badge-pay-refunded {
   background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.25);
   color: #a855f7;
 }
 
-/* Actions */
-.confirmation-actions {
-  display: flex;
-  gap: var(--spacing-3);
-  margin-top: var(--spacing-6);
+/* ── Barcode Section ── */
+.bc-barcode-section {
+  padding: var(--spacing-4) var(--spacing-6) var(--spacing-6);
+  text-align: center;
 }
 
-.confirmation-actions > * {
-  flex: 1;
+.bc-scan-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-3);
+}
+
+.bc-barcode {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  height: 56px;
+  gap: 0;
+  background: #ffffff;
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-2) var(--spacing-4);
+  overflow: hidden;
+}
+
+.bc-bar {
+  height: 100%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.bc-gap {
+  background: white !important;
+}
+
+.bc-barcode-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.2em;
+  margin-top: var(--spacing-2);
+  word-break: break-all;
+}
+
+/* ─────────────────────
+   ACTION BUTTONS
+───────────────────── */
+.bc-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+}
+
+.bc-btn-download {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-2);
-  padding: var(--spacing-3);
-  border-radius: var(--border-radius-md);
-  font-weight: 600;
+  padding: var(--spacing-4);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  border-radius: var(--border-radius-lg);
+  width: 100%;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.bc-btn-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
   font-size: var(--font-size-sm);
+  font-weight: 600;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
   transition: all var(--transition-fast);
 }
 
-.btn-outline {
-  border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-  background: transparent;
+.bc-btn-home:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text-primary);
+  background: rgba(255,255,255,0.03);
 }
 
-.btn-outline:hover {
-  border-color: var(--color-text-secondary);
-  color: var(--color-text-primary);
+/* Footer note */
+.bc-note {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* ─────────────────────
+   PRINT STYLES
+───────────────────── */
+@media print {
+  .bc-page {
+    background: white !important;
+    padding: 0;
+  }
+
+  .bc-confetti,
+  .bc-actions,
+  .bc-note,
+  .bc-header,
+  nav,
+  footer { display: none !important; }
+
+  .bc-ticket {
+    border: 2px solid #333;
+    border-radius: 12px;
+    box-shadow: none;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .bc-ticket-top {
+    background: #f5f5f5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .bc-ticket-movie-title { color: #111; }
+  .bc-detail-value       { color: #111; }
+  .bc-detail-label       { color: #555; }
+  .bc-barcode            { background: white; border: 1px solid #eee; }
+  .bc-bar                { background: #111 !important; }
+  .bc-gap                { background: white !important; }
+
+  .bc-eticket-label {
+    background: #fef9c3;
+    color: #854d0e;
+    border-color: #d97706;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .bc-title { font-size: var(--font-size-2xl); }
+  .bc-ticket-movie-title { font-size: var(--font-size-lg); }
+  .bc-ticket-poster { width: 60px; height: 88px; }
+  .bc-filmhole { width: 14px; height: 10px; }
+  .bc-details-grid { gap: var(--spacing-4) var(--spacing-3); }
 }
