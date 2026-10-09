@@ -1,114 +1,187 @@
+/* ── MovieCard.css ──────────────────────────────────────────────────── */
+
 .movie-card {
   display: block;
   border-radius: var(--border-radius-xl);
   overflow: hidden;
   box-shadow: var(--shadow-md);
-  transition: all var(--transition-normal);
   background-color: var(--color-surface);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  position: relative;
 }
 
 .movie-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-glow);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(220, 38, 38, 0.35);
+  z-index: 2;
 }
 
+/* ── Poster ──────────────────────────────────────────────────────────── */
 .movie-poster-container {
-  height: 400px;
   position: relative;
   overflow: hidden;
+  height: 360px;
 }
 
 .movie-poster {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform var(--transition-slow);
 }
 
 .movie-card:hover .movie-poster {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
-.movie-overlay {
+/* ── Gradient overlay (always visible, stronger on hover) ─────────── */
+.movie-poster-container::after {
+  content: '';
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: var(--spacing-4);
-  background: linear-gradient(0deg, rgba(10,10,10,1) 0%, rgba(10,10,10,0.6) 35%, rgba(10,10,10,0) 60%);
-  opacity: 0.9;
-  transition: opacity var(--transition-normal);
+  background: linear-gradient(
+    0deg,
+    rgba(10, 10, 10, 1) 0%,
+    rgba(10, 10, 10, 0.6) 40%,
+    rgba(10, 10, 10, 0.1) 65%,
+    transparent 100%
+  );
+  transition: background var(--transition-normal);
 }
 
-.movie-card:hover .movie-overlay {
-  opacity: 1;
+.movie-card:hover .movie-poster-container::after {
+  background: linear-gradient(
+    0deg,
+    rgba(10, 10, 10, 1) 0%,
+    rgba(10, 10, 10, 0.75) 45%,
+    rgba(10, 10, 10, 0.3) 70%,
+    transparent 100%
+  );
 }
 
+/* ── Top badges ──────────────────────────────────────────────────────── */
 .movie-overlay-top {
+  position: absolute;
+  top: var(--spacing-3);
+  left: var(--spacing-3);
+  right: var(--spacing-3);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-}
-
-.movie-overlay-bottom {
-  margin-top: auto;
+  z-index: 2;
 }
 
 .badge {
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-xs);
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
 }
 
-.badge-accent {
+.badge-cert {
   background-color: var(--color-primary);
-  color: white;
+  color: #fff;
 }
 
 .movie-rating {
   display: flex;
   align-items: center;
   gap: 4px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  padding: 3px 8px;
+  border-radius: var(--border-radius-full);
   color: var(--color-warning);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: 700;
 }
 
+/* ── Bottom info ─────────────────────────────────────────────────────── */
+.movie-overlay-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-4);
+  z-index: 2;
+}
+
 .movie-title {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-1);
-  overflow: hidden;
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.3;
 }
 
 .movie-meta {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
+  margin-bottom: 2px;
 }
 
 .movie-genres {
-  overflow: hidden;
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 160px;
+  max-width: 140px;
 }
 
 .movie-duration {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   white-space: nowrap;
 }
 
 .movie-dot {
-  opacity: 0.5;
+  opacity: 0.4;
+}
+
+.movie-language {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-2);
+}
+
+/* ── Book Now CTA ────────────────────────────────────────────────────── */
+.movie-cta {
+  transform: translateY(14px);
+  opacity: 0;
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+}
+
+.movie-card:hover .movie-cta {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.movie-cta-btn {
+  display: inline-block;
+  background: var(--gradient-primary);
+  color: #fff;
+  padding: var(--spacing-2) var(--spacing-5);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 12px var(--color-primary-muted);
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast);
+}
+
+.movie-cta-btn:hover {
+  box-shadow: var(--shadow-glow);
 }
