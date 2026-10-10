@@ -22,7 +22,7 @@ const movieSchema = new mongoose.Schema(
 );
 
 // Indexes for search and filtering
-movieSchema.index({ title: 'text' });
+movieSchema.index({ title: 'text' }, { language_override: 'dummy_language' });
 movieSchema.index({ status: 1 });
 movieSchema.index({ language: 1 });
 movieSchema.index({ genres: 1 });
