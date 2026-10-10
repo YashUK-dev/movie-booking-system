@@ -70,6 +70,14 @@
   justify-content: space-between;
   align-items: flex-start;
   z-index: 2;
+  gap: var(--spacing-2);
+}
+
+.movie-badges-left {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
 }
 
 .badge {
@@ -86,6 +94,13 @@
   color: #fff;
 }
 
+.badge-status {
+  background-color: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  backdrop-filter: blur(4px);
+}
+
 .movie-rating {
   display: flex;
   align-items: center;
@@ -97,6 +112,7 @@
   color: var(--color-warning);
   font-size: var(--font-size-xs);
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 /* ── Bottom info ─────────────────────────────────────────────────────── */
@@ -163,9 +179,23 @@
   transition: transform var(--transition-normal), opacity var(--transition-normal);
 }
 
-.movie-card:hover .movie-cta {
+.movie-card:hover .movie-cta,
+.movie-card:focus-visible .movie-cta {
   transform: translateY(0);
   opacity: 1;
+}
+
+.movie-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* Always show CTA on touch/pointer-coarse devices so mobile users aren't locked out */
+@media (hover: none) {
+  .movie-cta {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .movie-cta-btn {
@@ -185,3 +215,4 @@
 .movie-cta-btn:hover {
   box-shadow: var(--shadow-glow);
 }
+

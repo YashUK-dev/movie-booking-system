@@ -119,3 +119,21 @@
   color: var(--color-text-muted);
   font-size: var(--font-size-xl);
 }
+
+.ui-clear-btn {
+  background: var(--gradient-primary);
+  color: #fff;
+  padding: var(--spacing-2) var(--spacing-6);
+  border-radius: var(--border-radius-full);
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-normal);
+  box-shadow: 0 4px 12px var(--color-primary-muted);
+}
+
+.ui-clear-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
