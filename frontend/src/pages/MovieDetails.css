@@ -259,6 +259,17 @@
   gap: var(--spacing-3);
 }
 
+.showtime-admin-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--spacing-2);
+}
+
+.show-edit-button {
+  width: 100%;
+}
+
 .showtime-btn {
   display: flex;
   flex-direction: column;
@@ -303,4 +314,275 @@
   text-align: center;
   color: var(--color-text-muted);
   font-size: var(--font-size-lg);
+}
+
+.admin-edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid rgba(220, 38, 38, 0.55);
+  border-radius: var(--border-radius-md);
+  background: rgba(220, 38, 38, 0.14);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.admin-edit-button:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.28);
+  border-color: var(--color-primary);
+}
+
+.admin-edit-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.admin-delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  border-radius: var(--border-radius-md);
+  background: rgba(239, 68, 68, 0.14);
+  color: #fca5a5;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.admin-delete-button:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.28);
+  border-color: #ef4444;
+}
+
+.admin-delete-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.showtimes-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+}
+
+.showtimes-title-row .section-title {
+  margin-bottom: 0;
+}
+
+.edit-success-message {
+  color: #4ade80;
+  font-size: var(--font-size-sm);
+}
+
+.details-editor-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+  background: rgba(0, 0, 0, 0.76);
+}
+
+.details-editor {
+  width: min(100%, 760px);
+  max-height: min(92vh, 960px);
+  overflow-y: auto;
+  padding: var(--spacing-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-xl);
+  background: var(--color-surface);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.details-editor-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-5);
+}
+
+.details-editor-header h2 {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xl);
+}
+
+.details-editor-header p {
+  margin-top: var(--spacing-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.details-editor-close {
+  display: grid;
+  place-items: center;
+  padding: var(--spacing-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.details-editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.details-editor-form > label,
+.details-editor-grid > label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.details-editor-form input:not([type="checkbox"]),
+.details-editor-form textarea,
+.details-editor-form select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background, #111);
+  color: var(--color-text-primary);
+  font: inherit;
+  font-weight: 400;
+}
+
+.details-editor-form input:focus,
+.details-editor-form textarea:focus,
+.details-editor-form select:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.details-editor-form textarea {
+  resize: vertical;
+}
+
+.details-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-4);
+}
+
+.details-editor-full-width {
+  grid-column: 1 / -1;
+}
+
+.details-editor-error {
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3);
+  border: 1px solid rgba(220, 38, 38, 0.55);
+  border-radius: var(--border-radius-md);
+  background: rgba(220, 38, 38, 0.12);
+  color: #fca5a5;
+  font-size: var(--font-size-sm);
+}
+
+.details-editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
+}
+
+.details-editor-cancel {
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.details-editor-cancel:hover:not(:disabled) {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-hover);
+}
+
+.movie-delete-confirmation {
+  width: min(100%, 440px);
+  padding: var(--spacing-6);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: var(--border-radius-xl);
+  background: var(--color-surface);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  animation: confirmation-enter 160ms ease-out;
+}
+
+.delete-confirmation-icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  margin-bottom: var(--spacing-4);
+  border-radius: var(--border-radius-full);
+  background: rgba(239, 68, 68, 0.14);
+  color: #f87171;
+}
+
+.movie-delete-confirmation h2 {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xl);
+}
+
+.movie-delete-confirmation > p {
+  margin: var(--spacing-3) 0 var(--spacing-5);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.movie-delete-confirmation .details-editor-error {
+  margin-bottom: var(--spacing-4);
+}
+
+@keyframes confirmation-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 600px) {
+  .details-editor {
+    padding: var(--spacing-4);
+  }
+
+  .details-editor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .details-editor-full-width {
+    grid-column: auto;
+  }
+
+  .theatre-header,
+  .showtimes-title-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
