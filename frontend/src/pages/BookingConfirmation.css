@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────
    BookingConfirmation.css
-   Branch: frontend/booking-payment
-   Teammate 4 — Booking Confirmation / Ticket Screen
+   Branch: frontend/booking-payment  |  Teammate 4
+   Ticket: 3-D thick, red glow, notched corners, barcode laser scan
 ───────────────────────────────────────── */
 
 /* ── Page Shell ── */
@@ -10,190 +10,424 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: var(--spacing-10) var(--spacing-4) var(--spacing-16);
+  padding: var(--spacing-8) var(--spacing-4) var(--spacing-16);
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  background: #07080d;
 }
 
-/* Ambient background glow */
-.bc-page::before {
-  content: '';
+/* ─── AMBIENT MOVIE BACKDROP ─── */
+.bc-backdrop {
   position: fixed;
-  top: -20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(220, 38, 38, 0.08) 0%, transparent 65%);
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+  filter: blur(52px) saturate(1.5);
+  opacity: 0.16;
+  transform: scale(1.1);
   pointer-events: none;
   z-index: 0;
 }
 
+.bc-backdrop-glow {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 500px;
+  background: radial-gradient(circle, rgba(220,38,38,0.28) 0%, rgba(239,68,68,0.06) 50%, transparent 72%);
+  pointer-events: none;
+  animation: bc-ambient 7s ease-in-out infinite alternate;
+}
+
+.bc-backdrop-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 25%, transparent 0%, #07080d 75%);
+}
+
+@keyframes bc-ambient {
+  0%   { transform: translateX(-50%) scale(0.9);  opacity: 0.6; }
+  100% { transform: translateX(-50%) scale(1.15); opacity: 1;   }
+}
+
+/* ─── WRAPPER ─── */
 .bc-wrapper {
   width: 100%;
-  max-width: 520px;
+  max-width: 540px;
   position: relative;
-  z-index: 1;
-  animation: bc-slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  z-index: 10;
+  animation: bc-slideUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
 }
 
 @keyframes bc-slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(36px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
 }
 
-/* ─────────────────────
-   CONFETTI
-───────────────────── */
+/* ─────────────────────────────────────────
+   CONFETTI RAIN + CORNER CANNONS
+───────────────────────────────────────── */
 .bc-confetti {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
-  z-index: 100;
+  z-index: 9999;
   overflow: hidden;
 }
 
-.bc-particle {
+.bc-rain-particle {
   position: absolute;
-  top: -16px;
+  top: -24px;
+  opacity: 0;
+  border-radius: 2px;
+  animation: bc-rain-fall linear both;
+}
+
+.bc-shape-0 { border-radius: 2px; }
+.bc-shape-1 { border-radius: 50%; }
+.bc-shape-2 { border-radius: 1px; }
+.bc-shape-3 { transform: rotate(45deg); }
+
+@keyframes bc-rain-fall {
+  0%   { opacity: 1; transform: translateY(-20px) translateX(0) rotate(0deg); }
+  30%  { opacity: 1; transform: translateY(30vh) translateX(var(--drift,20px)) rotate(200deg); }
+  70%  { opacity: 0.9; transform: translateY(65vh) translateX(calc(var(--drift,20px)*-0.6)) rotate(480deg); }
+  100% { opacity: 0; transform: translateY(105vh) translateX(var(--drift,20px)) rotate(720deg); }
+}
+
+.bc-cannon-origin { position: absolute; bottom: 0; width: 6px; height: 6px; }
+.bc-cannon-left   { left: 0; }
+.bc-cannon-right  { right: 0; }
+
+.bc-cannon-particle {
+  position: absolute;
+  bottom: 0;
   border-radius: 2px;
   opacity: 0;
-  animation: bc-confetti-fall linear both;
+  animation: bc-cannon-burst ease-out both;
 }
 
-.bc-shape-1 { border-radius: 50%; }
-.bc-shape-2 { border-radius: 1px; height: 3px !important; }
-
-@keyframes bc-confetti-fall {
-  0%   { opacity: 1; transform: translateY(-10px) rotate(0deg); }
-  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+@keyframes bc-cannon-burst {
+  0%   { opacity: 1; transform: translate(0,0) scale(0.3) rotate(0deg); }
+  30%  { opacity: 1; transform: translate(calc(var(--tx)*.5), calc(var(--ty)*.7)) scale(1.3) rotate(280deg); }
+  60%  { opacity: 0.9; transform: translate(var(--tx), var(--ty)) scale(1) rotate(540deg); }
+  100% { opacity: 0; transform: translate(calc(var(--tx)*1.1), calc(var(--ty) + 350px)) scale(0.7) rotate(900deg); }
 }
 
-/* ─────────────────────
+/* ─────────────────────────────────────────
    SUCCESS HEADER
-───────────────────── */
+───────────────────────────────────────── */
 .bc-header {
   text-align: center;
-  margin-bottom: var(--spacing-8);
+  margin-bottom: var(--spacing-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .bc-success-ring {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 96px;
-  height: 96px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
-  background: rgba(22, 163, 74, 0.08);
-  border: 2px solid rgba(22, 163, 74, 0.2);
-  margin-bottom: var(--spacing-5);
-  animation: bc-ring-pulse 2.4s ease-in-out infinite;
-  position: relative;
+  background: radial-gradient(circle, rgba(22,163,74,.24) 0%, rgba(22,163,74,.05) 70%);
+  border: 2px solid rgba(34,197,94,.4);
+  margin-bottom: var(--spacing-4);
+  cursor: pointer;
+  box-shadow: 0 0 32px rgba(34,197,94,.22);
+  transition: transform .3s cubic-bezier(.175,.885,.32,1.275), box-shadow .3s;
 }
 
-/* Outer glow ring */
+.bc-success-ring:hover {
+  transform: scale(1.09);
+  box-shadow: 0 0 48px rgba(34,197,94,.44);
+}
+
 .bc-success-ring::before {
   content: '';
   position: absolute;
-  inset: -8px;
+  inset: -10px;
   border-radius: 50%;
-  border: 2px solid rgba(22, 163, 74, 0.1);
-  animation: bc-ring-pulse 2.4s ease-in-out 0.4s infinite;
+  border: 1px dashed rgba(34,197,94,.25);
+  animation: bc-spin-slow 18s linear infinite;
 }
 
-/* Innermost ring */
+@keyframes bc-spin-slow { to { transform: rotate(360deg); } }
+
 .bc-success-ring-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 68px;
-  height: 68px;
+  width: 64px; height: 64px;
   border-radius: 50%;
-  background: rgba(22, 163, 74, 0.12);
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(22,163,74,.18);
+  border: 1px solid rgba(74,222,128,.35);
 }
 
 .bc-check-icon {
-  color: var(--color-success);
-  animation: bc-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
-}
-
-@keyframes bc-ring-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%       { transform: scale(1.06); opacity: 0.7; }
+  color: #4ade80;
+  filter: drop-shadow(0 0 10px rgba(74,222,128,.55));
+  animation: bc-pop .65s cubic-bezier(.175,.885,.32,1.275) .15s both;
 }
 
 @keyframes bc-pop {
-  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
-  60%  { transform: scale(1.2) rotate(5deg); }
+  0%   { transform: scale(0) rotate(-45deg); opacity: 0; }
+  60%  { transform: scale(1.25) rotate(6deg); }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
+.bc-ring-badge {
+  position: absolute;
+  bottom: -7px;
+  background: #16a34a;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  padding: 1px 8px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+
 .bc-title {
-  font-size: var(--font-size-3xl);
+  font-size: 2.1rem;
   font-weight: 800;
   margin-bottom: var(--spacing-2);
-  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #fff 30%, #fca5a5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -.02em;
 }
 
 .bc-subtitle {
-  color: var(--color-text-muted);
+  color: #94a3b8;
   font-size: var(--font-size-sm);
-  line-height: 1.6;
+  max-width: 400px;
+  margin-bottom: var(--spacing-3);
+  line-height: 1.5;
 }
 
-/* ─────────────────────
-   THE TICKET
-───────────────────── */
-.bc-ticket {
-  background: var(--color-surface);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+.bc-replay-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 999px;
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: all .25s;
+}
+
+.bc-replay-pill:hover {
+  background: rgba(220,38,38,.12);
+  border-color: rgba(239,68,68,.45);
+  color: #f87171;
+  transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════
+   THE 3-D PHYSICAL TICKET
+   ——— thick layered shadows + red glow ———
+═══════════════════════════════════════════ */
+.bc-ticket-3d-scene {
+  /* Slight downward perspective so we "see" the top edge of the ticket */
+  perspective: 1000px;
   margin-bottom: var(--spacing-6);
-  animation: bc-ticketIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+}
+
+.bc-ticket {
+  background: #111218;
+  border-radius: 20px;
+  overflow: visible;               /* allow notches to bleed out */
+  border: 1px solid rgba(255,255,255,.09);
+  position: relative;
+
+  /* ── 3-D THICKNESS illusion ──
+     We stack multiple box-shadows to simulate a physical thickness
+     viewed from slightly above: each layer is a shade darker / shifted
+     slightly downward, creating a stacked-card silhouette.           */
+  box-shadow:
+    /* Top highlight (light catching the top edge) */
+    0 -2px 0 0 rgba(255,255,255,.08),
+    /* Layer 1 – thin red glow bloom */
+    0 0 0 1px rgba(220,38,38,.35),
+    /* Layer 2 – soft red ambient halo */
+    0 0 30px 4px rgba(220,38,38,.22),
+    0 0 70px 10px rgba(220,38,38,.12),
+    /* "Thickness" shadow stack — each step = 1 px of depth */
+    0 3px  0 0 rgba(139,20,20,.9),
+    0 6px  0 0 rgba(110,14,14,.8),
+    0 9px  0 0 rgba( 85, 9, 9,.7),
+    0 12px 0 0 rgba( 65, 5, 5,.5),
+    0 15px 0 0 rgba( 45, 3, 3,.3),
+    /* Outer drop shadow so it floats */
+    0 22px 48px rgba(0,0,0,.75);
+
+  transform: perspective(900px) rotateX(1.5deg);
+  transition: transform .4s ease, box-shadow .4s ease;
+  animation: bc-ticketIn .65s cubic-bezier(.22,1,.36,1) .2s both;
 }
 
 @keyframes bc-ticketIn {
-  from { opacity: 0; transform: scale(0.94) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: perspective(900px) rotateX(1.5deg) translateY(24px) scale(0.93); }
+  to   { opacity: 1; transform: perspective(900px) rotateX(1.5deg) translateY(0)    scale(1);    }
 }
 
-/* ── Ticket Top (red-tinted movie section) ── */
+.bc-ticket:hover {
+  transform: perspective(900px) rotateX(0deg) translateY(-4px);
+  box-shadow:
+    0 -2px 0 0 rgba(255,255,255,.1),
+    0 0 0 1px rgba(239,68,68,.5),
+    0 0 40px 6px rgba(220,38,38,.32),
+    0 0 90px 18px rgba(220,38,38,.14),
+    0 3px  0 0 rgba(139,20,20,.95),
+    0 6px  0 0 rgba(110,14,14,.85),
+    0 9px  0 0 rgba( 85, 9, 9,.75),
+    0 12px 0 0 rgba( 65, 5, 5,.55),
+    0 15px 0 0 rgba( 45, 3, 3,.35),
+    0 28px 60px rgba(0,0,0,.85);
+}
+
+/* ── NOTCHED PUNCHED CORNERS (ticket stub look) ── */
+/* We use clip-path to cut semi-circles from all 4 corners */
+.bc-ticket {
+  clip-path: polygon(
+    /* top-left notch */
+    14px 0,
+    /* top edge */
+    calc(100% - 14px) 0,
+    /* top-right notch */
+    100% 0,
+    100% 14px,
+    /* right edge */
+    100% calc(100% - 14px),
+    /* bottom-right notch */
+    100% 100%,
+    calc(100% - 14px) 100%,
+    /* bottom edge */
+    14px 100%,
+    /* bottom-left notch */
+    0 100%,
+    0 calc(100% - 14px),
+    /* left edge */
+    0 14px,
+    14px 0
+  );
+  /* Real "bitten" rounded corners – radial clips via SVG mask or
+     just use the border-radius trick: */
+  border-radius: 18px;
+}
+
+/* Punched half-circle notches on left and right of the tear line —
+   they are absolutely positioned pseudo-elements on the divider */
+.bc-divider {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 30px;
+  overflow: visible;
+  background: #111218;
+  z-index: 2;
+}
+
+.bc-notch {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: #07080d;   /* matches page bg — creates the "punched" illusion */
+  border: 1px solid rgba(255,255,255,.07);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  flex-shrink: 0;
+}
+
+.bc-notch-left  { left: -15px; }
+.bc-notch-right { right: -15px; }
+
+.bc-dashes {
+  flex-grow: 1;
+  margin: 0 20px;
+  border-top: 2px dashed rgba(220,38,38,.3);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bc-tear-text {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: rgba(239,68,68,.4);
+  background: #111218;
+  padding: 0 8px;
+  transform: translateY(-50%);
+}
+
+/* ─── GOLDEN VIP BANNER ─── */
+.bc-vip-banner {
+  background: linear-gradient(90deg,
+    #92400e 0%, #b45309 20%, #f59e0b 42%,
+    #fbbf24 50%, #d97706 68%, #b45309 85%, #92400e 100%);
+  background-size: 220% 100%;
+  animation: bc-shimmer-gold 5s linear infinite;
+  color: #1a0c00;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 20px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+@keyframes bc-shimmer-gold {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 220% 50%; }
+}
+
+.bc-vip-left, .bc-vip-right {
+  display: flex; align-items: center; gap: 5px;
+}
+
+.bc-vip-sparkle { animation: bc-spin-slow 6s linear infinite; }
+
+/* ─── TICKET TOP (movie section) ─── */
 .bc-ticket-top {
   position: relative;
   padding: var(--spacing-6);
   background: linear-gradient(
-    135deg,
-    rgba(220, 38, 38, 0.18) 0%,
-    rgba(220, 38, 38, 0.05) 60%,
-    rgba(10, 10, 10, 0) 100%
+    145deg,
+    rgba(220,38,38,.22) 0%,
+    rgba(40,12,18,.85) 55%,
+    rgba(17,18,24,.98) 100%
   );
   overflow: hidden;
 }
 
-/* Decorative film strip holes on top edge */
+/* Film perforations */
 .bc-filmstrip {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   display: flex;
   justify-content: space-around;
-  padding: 0 var(--spacing-3);
+  padding: 0 14px;
   pointer-events: none;
 }
 
 .bc-filmhole {
-  width: 20px;
-  height: 12px;
+  width: 18px; height: 10px;
   border-radius: 3px;
-  background: var(--color-background);
-  border: 1px solid rgba(255,255,255,0.04);
+  background: #07080d;
+  border: 1px solid rgba(255,255,255,.04);
   margin-top: -1px;
 }
 
@@ -201,376 +435,359 @@
   display: flex;
   gap: var(--spacing-4);
   align-items: flex-start;
-  padding-top: var(--spacing-3);
+  padding-top: var(--spacing-2);
 }
 
-/* Movie poster */
+/* Poster */
 .bc-ticket-poster-wrap {
   position: relative;
   flex-shrink: 0;
+  border-radius: 11px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(239,68,68,.5), rgba(185,28,28,.5));
+  box-shadow: 0 10px 26px rgba(0,0,0,.75);
 }
 
 .bc-ticket-poster {
-  width: 74px;
-  height: 106px;
+  width: 80px; height: 116px;
   object-fit: cover;
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+  border-radius: 9px;
   display: block;
 }
 
+.bc-ticket-poster-fallback {
+  width: 80px; height: 116px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #1e1b4b 0%, #31102f 100%);
+  border: 1px solid rgba(255,255,255,.1);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px; color: #f87171;
+  font-size: 10px; font-weight: 800; letter-spacing: .1em;
+  flex-shrink: 0;
+}
+
 .bc-poster-overlay {
-  position: absolute;
-  inset: 0;
-  border-radius: var(--border-radius-lg);
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  position: absolute; inset: 0; border-radius: 9px;
+  background: linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 55%);
   pointer-events: none;
 }
 
-/* Movie text info */
-.bc-ticket-movie-info {
-  flex: 1;
-  min-width: 0;
+/* Movie text */
+.bc-ticket-movie-info { flex: 1; min-width: 0; }
+
+.bc-tags-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: var(--spacing-2);
 }
 
 .bc-eticket-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 10px;
-  border-radius: var(--border-radius-full);
-  background: rgba(234, 179, 8, 0.15);
-  border: 1px solid rgba(234, 179, 8, 0.3);
-  color: var(--color-warning);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-2);
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(234,179,8,.18);
+  border: 1px solid rgba(234,179,8,.4);
+  color: #fbbf24;
+  font-size: 10px; font-weight: 800; letter-spacing: .1em;
+}
+
+.bc-format-tag {
+  padding: 2px 8px; border-radius: 999px;
+  background: rgba(239,68,68,.18);
+  border: 1px solid rgba(239,68,68,.4);
+  color: #f87171;
+  font-size: 10px; font-weight: 700;
+}
+
+.bc-lang-tag {
+  padding: 2px 8px; border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #94a3b8;
+  font-size: 10px; font-weight: 600;
 }
 
 .bc-ticket-movie-title {
-  font-size: var(--font-size-xl);
-  font-weight: 800;
-  line-height: 1.25;
-  margin-bottom: var(--spacing-1);
-  word-break: break-word;
-}
-
-.bc-ticket-format {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
+  font-size: 1.45rem; font-weight: 800;
+  color: #fff; line-height: 1.25;
   margin-bottom: var(--spacing-2);
+  text-shadow: 0 2px 12px rgba(0,0,0,.5);
 }
 
 .bc-ticket-theatre {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: #cbd5e1;
 }
 
-.bc-ticket-theatre svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
+.bc-ticket-theatre svg { color: #ef4444; flex-shrink: 0; }
 
-/* ── Tear Divider ── */
-.bc-divider {
-  display: flex;
-  align-items: center;
-  position: relative;
-  height: 28px;
-  overflow: visible;
-}
-
-.bc-notch {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--color-background);
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  flex-shrink: 0;
-  box-shadow: inset 0 0 0 1px var(--color-border);
-  z-index: 2;
-}
-
-.bc-notch-left  { left: -14px; }
-.bc-notch-right { right: -14px; }
-
-.bc-dashes {
-  flex-grow: 1;
-  margin: 0 20px;
-  border-top: 2px dashed var(--color-border);
-}
-
-/* ── Ticket Details ── */
+/* ─── TICKET DETAILS ─── */
 .bc-ticket-details {
   padding: var(--spacing-5) var(--spacing-6);
+  background: #111218;
 }
 
 .bc-details-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-5) var(--spacing-4);
+  gap: var(--spacing-4) var(--spacing-5);
   margin-bottom: var(--spacing-5);
 }
 
-.bc-detail-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+.bc-detail-cell { display: flex; flex-direction: column; gap: 4px; }
 
 .bc-detail-label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
+  display: flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: #64748b;
 }
+
+.bc-detail-label svg { color: #dc2626; }
 
 .bc-detail-value {
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  line-height: 1.3;
+  font-size: var(--font-size-sm); font-weight: 700;
+  color: #f8fafc; line-height: 1.3;
 }
 
-.bc-detail-seats {
-  color: var(--color-primary);
-  font-size: var(--font-size-base);
+.bc-detail-time { color: #fbbf24; font-size: 1rem; }
+
+/* Seat chips */
+.bc-seat-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+
+.bc-seat-chip {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(220,38,38,.28), rgba(220,38,38,.12));
+  border: 1px solid rgba(239,68,68,.5);
+  color: #f87171;
+  font-size: 12px; font-weight: 800;
+  box-shadow: 0 0 8px rgba(220,38,38,.15);
+}
+
+/* Copy order-ID button */
+.bc-order-id-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  padding: 3px 8px; border-radius: 6px;
+  cursor: pointer; width: fit-content;
+  transition: all .2s;
+}
+
+.bc-order-id-btn:hover {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(239,68,68,.4);
 }
 
 .bc-booking-id {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: var(--font-size-sm);
-  color: var(--color-primary);
-  letter-spacing: 0.06em;
-  word-break: break-all;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-size: 12px; color: #cbd5e1; letter-spacing: .05em;
 }
 
-/* Amount Row */
+.bc-copy-icon        { color: #94a3b8; }
+.bc-copy-icon.copied { color: #4ade80; }
+
+/* Amount row */
 .bc-amount-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  display: flex; justify-content: space-between; align-items: flex-end;
   padding: var(--spacing-4) 0;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(255,255,255,.07);
   margin-bottom: var(--spacing-4);
 }
 
-.bc-amount-right {
-  text-align: right;
+.bc-screen-name {
+  font-size: var(--font-size-sm); font-weight: 700;
+  color: #fff; display: block; margin-top: 2px;
 }
+
+.bc-amount-right { text-align: right; }
 
 .bc-amount {
   display: block;
-  font-size: var(--font-size-2xl);
-  font-weight: 800;
-  color: var(--color-success);
-  line-height: 1;
-  margin-top: 4px;
+  font-size: 1.9rem; font-weight: 800;
+  color: #4ade80; line-height: 1; margin-top: 4px;
+  text-shadow: 0 0 18px rgba(74,222,128,.35);
 }
 
-/* Status Badges */
-.bc-status-row {
-  display: flex;
-  gap: var(--spacing-2);
-  flex-wrap: wrap;
-}
+/* Status badges */
+.bc-status-row { display: flex; gap: var(--spacing-2); flex-wrap: wrap; }
 
 .bc-badge {
-  padding: 3px 12px;
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  padding: 4px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
 }
 
-.bc-badge-confirmed, .bc-badge-pay-success {
-  background: rgba(22, 163, 74, 0.15);
-  border: 1px solid rgba(22, 163, 74, 0.25);
-  color: var(--color-success);
+.bc-badge-confirmed,  .bc-badge-pay-success  {
+  background: rgba(34,197,94,.14); border: 1px solid rgba(34,197,94,.35); color: #4ade80;
 }
 
-.bc-badge-pending, .bc-badge-pay-pending {
-  background: rgba(234, 179, 8, 0.15);
-  border: 1px solid rgba(234, 179, 8, 0.25);
-  color: var(--color-warning);
+.bc-badge-pending,    .bc-badge-pay-pending   {
+  background: rgba(234,179,8,.14); border: 1px solid rgba(234,179,8,.35); color: #facc15;
 }
 
-.bc-badge-cancelled, .bc-badge-pay-failed {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  color: var(--color-danger);
+.bc-badge-cancelled,  .bc-badge-pay-failed    {
+  background: rgba(239,68,68,.14); border: 1px solid rgba(239,68,68,.35); color: #f87171;
 }
 
-.bc-badge-pay-refunded {
-  background: rgba(168, 85, 247, 0.15);
-  border: 1px solid rgba(168, 85, 247, 0.25);
-  color: #a855f7;
-}
-
-/* ── Barcode Section ── */
+/* ═══════════════════════════════════════════
+   BARCODE + RED LASER SCAN ANIMATION
+   Laser line travels left → right continuously
+═══════════════════════════════════════════ */
 .bc-barcode-section {
-  padding: var(--spacing-4) var(--spacing-6) var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-5) var(--spacing-5);
+  background: #0d0e14;
   text-align: center;
 }
 
 .bc-scan-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  display: block;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: #dc2626;
   margin-bottom: var(--spacing-3);
 }
 
+/* Outer container for the barcode + laser overlay */
+.bc-barcode-outer {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 16px 10px;
+  overflow: hidden;           /* keeps laser inside the white area */
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.08),
+    inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+/* ─── RED LASER – travels left → right over barcode ─── */
+.bc-laser-line {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(220,38,38,.5) 20%,
+    #ef4444 50%,
+    rgba(220,38,38,.5) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 6px 3px rgba(239,68,68,.55),
+    0 0 14px 6px rgba(220,38,38,.3);
+  border-radius: 1px;
+  z-index: 4;
+  animation: bc-laser-sweep 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes bc-laser-sweep {
+  0%   { left: 0%;   opacity: 0; }
+  5%   { opacity: 1; }
+  50%  { left: calc(100% - 3px); }
+  55%  { opacity: 1; }
+  60%  { left: calc(100% - 3px); opacity: 0; }
+  65%  { left: 0%; opacity: 0; }
+  100% { left: 0%;   opacity: 0; }
+}
+
+/* The actual bars inside the white container */
 .bc-barcode {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: stretch;
   justify-content: center;
-  height: 56px;
+  height: 58px;
   gap: 0;
-  background: #ffffff;
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-2) var(--spacing-4);
-  overflow: hidden;
+  width: 100%;
 }
 
-.bc-bar {
-  height: 100%;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-.bc-gap {
-  background: white !important;
-}
+.bc-bar { height: 100%; display: inline-block; flex-shrink: 0; }
+.bc-gap { background: white !important; }
 
 .bc-barcode-text {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  letter-spacing: 0.2em;
-  margin-top: var(--spacing-2);
-  word-break: break-all;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .2em; color: #334155;
+  margin-top: 6px;
 }
 
-/* ─────────────────────
+/* ─────────────────────────────────────────
    ACTION BUTTONS
-───────────────────── */
+───────────────────────────────────────── */
 .bc-actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-4);
+  display: flex; flex-direction: column;
+  gap: var(--spacing-3); margin-bottom: var(--spacing-4);
 }
 
 .bc-btn-download {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-4);
-  font-size: var(--font-size-base);
-  font-weight: 700;
-  border-radius: var(--border-radius-lg);
-  width: 100%;
-  letter-spacing: 0.02em;
-  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--spacing-2); padding: 15px;
+  font-size: 1rem; font-weight: 700;
+  border-radius: 13px; width: 100%; cursor: pointer;
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  border: none; color: #fff;
+  box-shadow: 0 6px 22px rgba(220,38,38,.45);
+  transition: all .25s;
 }
 
-.bc-btn-home {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-4);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--color-border);
-  background: transparent;
-  color: var(--color-text-secondary);
-  transition: all var(--transition-fast);
+.bc-btn-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(220,38,38,.6);
 }
 
-.bc-btn-home:hover {
-  border-color: var(--color-border-hover);
-  color: var(--color-text-primary);
-  background: rgba(255,255,255,0.03);
+.bc-actions-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-3);
 }
 
-/* Footer note */
+.bc-btn-secondary {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 11px 14px;
+  font-size: var(--font-size-xs); font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid rgba(239,68,68,.25);
+  background: rgba(220,38,38,.06);
+  color: #f8fafc;
+  text-decoration: none;
+  transition: all .2s;
+}
+
+.bc-btn-secondary:hover {
+  background: rgba(220,38,38,.14);
+  border-color: rgba(239,68,68,.5);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 .bc-note {
-  text-align: center;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  line-height: 1.6;
+  text-align: center; font-size: 11px; color: #64748b; line-height: 1.5;
 }
 
-/* ─────────────────────
-   PRINT STYLES
-───────────────────── */
+/* ─── PRINT ─── */
 @media print {
-  .bc-page {
-    background: white !important;
-    padding: 0;
-  }
-
-  .bc-confetti,
-  .bc-actions,
-  .bc-note,
-  .bc-header,
-  nav,
-  footer { display: none !important; }
-
-  .bc-ticket {
-    border: 2px solid #333;
-    border-radius: 12px;
-    box-shadow: none;
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .bc-ticket-top {
-    background: #f5f5f5 !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .bc-ticket-movie-title { color: #111; }
-  .bc-detail-value       { color: #111; }
-  .bc-detail-label       { color: #555; }
-  .bc-barcode            { background: white; border: 1px solid #eee; }
-  .bc-bar                { background: #111 !important; }
-  .bc-gap                { background: white !important; }
-
-  .bc-eticket-label {
-    background: #fef9c3;
-    color: #854d0e;
-    border-color: #d97706;
-  }
+  .bc-page, .bc-ticket { background: white !important; }
+  .bc-confetti, .bc-backdrop, .bc-actions, .bc-note,
+  .bc-header, .bc-replay-pill, nav, footer { display: none !important; }
+  .bc-ticket { border: 2px solid #333; box-shadow: none !important; }
+  .bc-ticket-top { background: #f5f5f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bc-vip-banner { background: #f59e0b !important; -webkit-print-color-adjust: exact; }
+  .bc-barcode-section { background: white !important; }
+  .bc-barcode-outer  { background: white !important; box-shadow: 1px solid #ccc; }
+  .bc-laser-line { display: none !important; }
+  .bc-ticket-details { background: white !important; }
+  .bc-detail-value { color: #000 !important; }
+  .bc-detail-label { color: #555 !important; }
 }
 
-/* ── Mobile ── */
-@media (max-width: 480px) {
-  .bc-title { font-size: var(--font-size-2xl); }
-  .bc-ticket-movie-title { font-size: var(--font-size-lg); }
-  .bc-ticket-poster { width: 60px; height: 88px; }
-  .bc-filmhole { width: 14px; height: 10px; }
-  .bc-details-grid { gap: var(--spacing-4) var(--spacing-3); }
+/* ─── MOBILE ─── */
+@media (max-width: 520px) {
+  .bc-title { font-size: 1.75rem; }
+  .bc-ticket-movie-title { font-size: 1.2rem; }
+  .bc-ticket-poster { width: 68px; height: 98px; }
+  .bc-actions-row { grid-template-columns: 1fr; }
+  .bc-details-grid { gap: var(--spacing-3); }
 }
