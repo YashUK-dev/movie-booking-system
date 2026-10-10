@@ -1,0 +1,191 @@
+.showtimes-page {
+  min-height: 100vh;
+}
+
+.showtimes-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-4) 0;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  margin-bottom: var(--spacing-4);
+}
+
+.back-btn:hover {
+  color: var(--color-primary);
+}
+
+.movie-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.thumbnail {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: var(--border-radius-sm);
+}
+
+.movie-summary h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+}
+
+.showtimes-content {
+  padding: var(--spacing-8) var(--spacing-4);
+}
+
+.date-selector {
+  display: flex;
+  gap: var(--spacing-3);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-4);
+  margin-bottom: var(--spacing-8);
+}
+
+.date-selector::-webkit-scrollbar {
+  height: 6px;
+}
+.date-selector::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+}
+.date-selector::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 10px;
+}
+
+.date-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 76px;
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-xl);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.date-btn:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text-secondary);
+}
+
+.date-btn-active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-muted);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.date-day {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.date-num {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+}
+
+.date-month {
+  font-size: var(--font-size-xs);
+}
+
+.theatres-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.theatre-card {
+  padding: var(--spacing-6);
+  border-radius: var(--border-radius-xl);
+}
+
+.theatre-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.theatre-name {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.theatre-city {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.showtimes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+}
+
+.showtime-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  min-width: 110px;
+}
+
+.showtime-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.2);
+}
+
+.showtime-time {
+  font-weight: 600;
+  font-size: var(--font-size-base);
+}
+
+.showtime-meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.showtime-price {
+  font-size: var(--font-size-xs);
+  color: var(--color-success);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.empty-shows {
+  padding: var(--spacing-8);
+  border-radius: var(--border-radius-xl);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
