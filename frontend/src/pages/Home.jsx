@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { movieService } from '../services/movieService';
 import MovieCard from '../components/movie/MovieCard';
+import MovieReelGallery from '../components/movie/MovieReelGallery';
 import { LoadingSkeleton, ErrorMessage, EmptyState } from '../components/common/UIStates';
 import { Search, Film, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import './Home.css';
@@ -199,6 +200,9 @@ const Home = () => {
     <div className="home-page">
       {/* ── HERO SECTION ───────────────────────────────────────────── */}
       <section className="hero" aria-label="Hero banner and movie search">
+        {/* Animated cinematic reel gallery background */}
+        <MovieReelGallery movies={movies} />
+
         <div className="hero-bg" aria-hidden="true" />
         <div className="hero-orb hero-orb-1" aria-hidden="true" />
         <div className="hero-orb hero-orb-2" aria-hidden="true" />
