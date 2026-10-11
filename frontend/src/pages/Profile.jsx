@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { bookingService } from '../services/bookingService';
@@ -20,6 +20,7 @@ const Profile = () => {
   const [cancelModalBooking, setCancelModalBooking] = useState(null);
   const [actionMessage, setActionMessage] = useState(null);
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [currentTime] = useState(() => Date.now());
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -27,13 +28,7 @@ const Profile = () => {
     }
   }, [user, authLoading, navigate]);
 
-  useEffect(() => {
-    if (user) {
-      fetchBookings();
-    }
-  }, [user]);
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -48,7 +43,13 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      Promise.resolve().then(fetchBookings);
+    }
+  }, [user, fetchBookings]);
 
   const handleCancelBooking = async (bookingId) => {
     try {
@@ -102,9 +103,8 @@ const Profile = () => {
     if (booking.status !== 'CONFIRMED') return false;
     if (!booking.showId?.startTime) return false;
     const showTime = new Date(booking.showId.startTime).getTime();
-    const now = Date.now();
     // Cancellation allowed if > 2 hours before show
-    return (showTime - now) > (2 * 60 * 60 * 1000);
+    return (showTime - currentTime) > (2 * 60 * 60 * 1000);
   };
 
   return (
@@ -137,7 +137,7 @@ const Profile = () => {
                 )}
                 <div className="profile-detail-item">
                   <Calendar size={16} className="text-secondary" />
-                  <span>Member since {new Date(user.createdAt || Date.now()).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}</span>
+                  <span>Member since {user.createdAt ? new Date(user.createdAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : 'Recently'}</span>
                 </div>
               </div>
             </div>

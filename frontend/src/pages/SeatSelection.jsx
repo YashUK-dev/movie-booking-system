@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { showService } from '../services/showService';
 import { useAuth } from '../context/AuthContext';
@@ -18,14 +18,7 @@ const SeatSelection = () => {
   const [error, setError] = useState(null);
   const [actionError, setActionError] = useState(null);
 
-  useEffect(() => {
-    fetchData();
-    // Poll for seat updates every 30s
-    const interval = setInterval(fetchSeatData, 30000);
-    return () => clearInterval(interval);
-  }, [showId]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const [detailsRes, seatsRes] = await Promise.all([
@@ -44,9 +37,9 @@ const SeatSelection = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showId]);
 
-  const fetchSeatData = async () => {
+  const fetchSeatData = useCallback(async () => {
     try {
       const res = await showService.getShowSeats(showId);
       if (res?.success) {
@@ -64,7 +57,14 @@ const SeatSelection = () => {
     } catch {
       // Silent fail for background refresh
     }
-  };
+  }, [showId]);
+
+  useEffect(() => {
+    Promise.resolve().then(fetchData);
+    // Poll for seat updates every 30s
+    const interval = setInterval(fetchSeatData, 30000);
+    return () => clearInterval(interval);
+  }, [fetchData, fetchSeatData]);
 
   const toggleSeat = (seat, row) => {
     if (seat.status !== 'AVAILABLE') return;

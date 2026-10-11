@@ -5,5 +5,7 @@ export const showService = {
   getShows: (params = {}) => api.get('/shows', { params }),
   getShowDetails: (showId) => api.get(`/shows/${showId}`),
   getShowSeats: (showId) => api.get(`/shows/${showId}/seats`),
+  createShow: (show) => api.post('/shows', show),
   lockSeats: (showId, seatIds) => api.post(`/shows/${showId}/seats/lock`, { seatIds }),
+  updateShowStatus: (showId, status) => api.patch(`/shows/${showId}`, { status }),
 };

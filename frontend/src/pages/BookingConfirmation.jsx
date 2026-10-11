@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { bookingService } from '../services/bookingService';
 import { LoadingSpinner, ErrorMessage } from '../components/common/UIStates';
@@ -36,70 +36,75 @@ const generateBarcode = (str = '') => {
   return bars;
 };
 
+const pseudo = (seed) => {
+  const x = Math.sin(seed * 999) * 10000;
+  return x - Math.floor(x);
+};
+
+const CONFETTI_COLOURS = [
+  '#ef4444', '#dc2626', '#f87171', // Reds
+  '#fbbf24', '#f59e0b', '#d97706', // Golds
+  '#10b981', '#059669',             // Emeralds
+  '#38bdf8', '#0284c7',             // Cyans
+  '#a855f7', '#7c3aed',             // Purples
+  '#f43f5e', '#fb7185',             // Roses
+];
+
 /* ── Confetti & Corner Cannons Component ── */
 const Confetti = () => {
-  const COLOURS = [
-    '#ef4444', '#dc2626', '#f87171', // Reds
-    '#fbbf24', '#f59e0b', '#d97706', // Golds
-    '#10b981', '#059669',             // Emeralds
-    '#38bdf8', '#0284c7',             // Cyans
-    '#a855f7', '#7c3aed',             // Purples
-    '#f43f5e', '#fb7185',             // Roses
-  ];
-
   // Rain particles falling from overall header/top across entire screen width
-  const rainParticles = Array.from({ length: 65 }, (_, i) => {
+  const rainParticles = useMemo(() => Array.from({ length: 65 }, (_, i) => {
     const shape = i % 4; // 0: rect, 1: circle, 2: strip/ribbon, 3: diamond
     const size = 7 + (i % 5) * 2.5;
     return {
       id: `rain-${i}`,
-      color: COLOURS[i % COLOURS.length],
+      color: CONFETTI_COLOURS[i % CONFETTI_COLOURS.length],
       left: `${(i / 65) * 100 + (Math.sin(i * 1.5) * 3)}%`,
-      delay: `${(Math.random() * 2.2).toFixed(2)}s`,
-      duration: `${1.8 + Math.random() * 1.6}s`,
+      delay: `${(pseudo(i + 1) * 2.2).toFixed(2)}s`,
+      duration: `${1.8 + pseudo(i + 2) * 1.6}s`,
       size,
       shape,
-      drift: `${(Math.random() * 80 - 40).toFixed(0)}px`,
+      drift: `${(pseudo(i + 3) * 80 - 40).toFixed(0)}px`,
     };
-  });
+  }), []);
 
   // Left Corner Cannon: bursts from bottom-left corner shooting upwards & into center
-  const leftCannonParticles = Array.from({ length: 28 }, (_, i) => {
-    const angle = 30 + Math.random() * 45; // 30-75 degrees shooting up-right
-    const distance = 350 + Math.random() * 450;
+  const leftCannonParticles = useMemo(() => Array.from({ length: 28 }, (_, i) => {
+    const angle = 30 + pseudo(i + 10) * 45; // 30-75 degrees shooting up-right
+    const distance = 350 + pseudo(i + 11) * 450;
     const rad = (angle * Math.PI) / 180;
     const tx = Math.cos(rad) * distance;
     const ty = -Math.sin(rad) * distance;
     return {
       id: `cannon-left-${i}`,
-      color: COLOURS[(i + 3) % COLOURS.length],
+      color: CONFETTI_COLOURS[(i + 3) % CONFETTI_COLOURS.length],
       delay: `${(i * 0.035).toFixed(3)}s`,
-      duration: `${1.4 + Math.random() * 0.8}s`,
+      duration: `${1.4 + pseudo(i + 12) * 0.8}s`,
       size: 8 + (i % 4) * 2.5,
       tx: `${tx.toFixed(0)}px`,
       ty: `${ty.toFixed(0)}px`,
       shape: i % 3,
     };
-  });
+  }), []);
 
   // Right Corner Cannon: bursts from bottom-right corner shooting upwards & into center
-  const rightCannonParticles = Array.from({ length: 28 }, (_, i) => {
-    const angle = 30 + Math.random() * 45; // shooting up-left
-    const distance = 350 + Math.random() * 450;
+  const rightCannonParticles = useMemo(() => Array.from({ length: 28 }, (_, i) => {
+    const angle = 30 + pseudo(i + 20) * 45; // shooting up-left
+    const distance = 350 + pseudo(i + 21) * 450;
     const rad = (angle * Math.PI) / 180;
     const tx = -Math.cos(rad) * distance;
     const ty = -Math.sin(rad) * distance;
     return {
       id: `cannon-right-${i}`,
-      color: COLOURS[(i + 5) % COLOURS.length],
+      color: CONFETTI_COLOURS[(i + 5) % CONFETTI_COLOURS.length],
       delay: `${(i * 0.035).toFixed(3)}s`,
-      duration: `${1.4 + Math.random() * 0.8}s`,
+      duration: `${1.4 + pseudo(i + 22) * 0.8}s`,
       size: 8 + (i % 4) * 2.5,
       tx: `${tx.toFixed(0)}px`,
       ty: `${ty.toFixed(0)}px`,
       shape: i % 3,
     };
-  });
+  }), []);
 
   return (
     <div className="bc-confetti" aria-hidden="true">
@@ -170,11 +175,7 @@ const BookingConfirmation = () => {
   const [copiedId, setCopiedId] = useState(false);
   const ticketRef = useRef(null);
 
-  useEffect(() => {
-    fetchBooking();
-  }, [bookingId]);
-
-  const fetchBooking = async () => {
+  const fetchBooking = useCallback(async () => {
     try {
       const res = await bookingService.getBookingById(bookingId);
       if (res?.success) {
@@ -190,7 +191,11 @@ const BookingConfirmation = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [bookingId]);
+
+  useEffect(() => {
+    Promise.resolve().then(fetchBooking);
+  }, [fetchBooking]);
 
   const handleDownload = () => {
     window.print();

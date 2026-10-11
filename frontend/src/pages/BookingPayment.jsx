@@ -19,10 +19,8 @@ import {
   ShieldCheck,
   Film,
   Tag,
-  Check,
   Sparkles,
   Lock,
-  Percent,
 } from 'lucide-react';
 import './BookingPayment.css';
 
@@ -89,7 +87,6 @@ const BookingPayment = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
-  const [cardHolder, setCardHolder] = useState(user?.name || '');
   const [upiId, setUpiId] = useState('');
   const [selectedUpiApp, setSelectedUpiApp] = useState('Google Pay');
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
