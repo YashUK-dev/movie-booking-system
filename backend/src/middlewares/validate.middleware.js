@@ -10,7 +10,18 @@ export const validate = (schema) => async (req, res, next) => {
     });
     return next();
   } catch (error) {
-    const errorMessages = error.errors.map((err) => `${err.path.join('.')}: ${err.message}`).join(', ');
-    return next(new ApiError(422, `Validation failed: ${errorMessages}`, 'VALIDATION_ERROR'));
+    const issues = error.issues || error.errors || [];
+    if (issues.length > 0) {
+      const errorMessages = issues
+        .map((err) => {
+          const path = Array.isArray(err.path)
+            ? err.path.filter((p) => !['body', 'query', 'params'].includes(p)).join('.')
+            : '';
+          return path ? `${path}: ${err.message}` : err.message;
+        })
+        .join(', ');
+      return next(new ApiError(422, `Validation failed: ${errorMessages}`, 'VALIDATION_ERROR'));
+    }
+    return next(new ApiError(422, error.message || 'Validation failed', 'VALIDATION_ERROR'));
   }
 };

@@ -13,4 +13,16 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+// Intercept responses to extract clear error messages returned by API
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const serverMessage = error.response?.data?.message;
+    if (serverMessage) {
+      error.message = serverMessage;
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default API;
